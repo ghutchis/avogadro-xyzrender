@@ -1,0 +1,43 @@
+[project]
+name = "avogadro-xyzrender"
+version = "0.1.0"
+description = "Publication-quality molecular graphics from Avogadro using xyzrender"
+authors = [{name = "Geoff Hutchison", email = "geoff.hutchison@gmail.com"}]
+license = "BSD-3-Clause"
+dependencies = ["xyzrender>=0.3.8"]
+requires-python = ">= 3.12"
+
+[project.scripts]
+avogadro-xyzrender = "avogadro_xyzrender:main"
+
+[build-system]
+build-backend = "uv_build"
+requires = ["uv_build>=0.10.2,<0.11.0"]
+
+[tool.pixi.workspace]
+channels = ["conda-forge"]
+platforms = ["win-64", "linux-64", "linux-aarch64", "osx-64", "osx-arm64"]
+
+[tool.pixi.pypi-dependencies]
+avogadro-xyzrender = { path = ".", editable = true }
+
+[tool.pixi.tasks]
+
+[tool.avogadro]
+minimum-avogadro-version = "1.103"
+
+[[tool.avogadro.menu-commands]]
+identifier = "render"
+menu = "File"
+submenu = "Export"
+item = "Rendered Image (xyzrender)..."
+input-format = "sdf"
+user-options = "src/avogadro_xyzrender/render-options.json"
+
+[[tool.avogadro.menu-commands]]
+identifier = "animation"
+menu = "File"
+submenu = "Export"
+item = "Rendered Animation (xyzrender)..."
+input-format = "sdf"
+user-options = "src/avogadro_xyzrender/animation-options.json"

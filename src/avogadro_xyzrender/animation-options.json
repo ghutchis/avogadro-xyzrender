@@ -1,0 +1,59 @@
+{
+    "output_dir": {
+        "type": "string",
+        "label": "Output Directory",
+        "default": "~/xyzrender-output",
+        "toolTip": "Directory where the animated GIF will be saved",
+        "order": 0
+    },
+    "axis": {
+        "type": "stringList",
+        "label": "Rotation Axis",
+        "default": 1,
+        "values": ["x", "y", "z"],
+        "toolTip": "Axis the molecule rotates about",
+        "order": 1
+    },
+    "style": {
+        "type": "stringList",
+        "label": "Style Preset",
+        "default": 0,
+        "values": ["default", "flat", "paton", "pmol", "skeletal", "bubble",
+                   "vdw", "tube", "mtube", "btube", "wire", "graph"],
+        "toolTip": "xyzrender style preset",
+        "order": 2
+    },
+    "canvas_size": {
+        "type": "integer",
+        "label": "Canvas Size (px)",
+        "default": 500,
+        "minimum": 100,
+        "maximum": 2000,
+        "toolTip": "Canvas size in pixels. Large sizes make big GIF files.",
+        "order": 3
+    },
+    "fps": {
+        "type": "integer",
+        "label": "Frames per Second",
+        "default": 10,
+        "minimum": 1,
+        "maximum": 60,
+        "toolTip": "Playback rate of the animation",
+        "order": 4
+    },
+    "hydrogens": {
+        "type": "stringList",
+        "label": "Hydrogens",
+        "default": 0,
+        "values": ["Preset default", "Show all", "Hide all"],
+        "toolTip": "Override the preset's handling of hydrogen atoms",
+        "order": 5
+    },
+    "transparent": {
+        "type": "boolean",
+        "label": "Transparent Background",
+        "default": false,
+        "toolTip": "Render with a transparent background instead of the preset color",
+        "order": 6
+    }
+}

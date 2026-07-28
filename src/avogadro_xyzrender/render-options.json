@@ -1,0 +1,71 @@
+{
+    "output_dir": {
+        "type": "string",
+        "label": "Output Directory",
+        "default": "~/xyzrender-output",
+        "toolTip": "Directory where rendered images will be saved",
+        "order": 0
+    },
+    "format": {
+        "type": "stringList",
+        "label": "Image Format",
+        "default": 0,
+        "values": ["SVG", "PNG", "PDF", "TIFF"],
+        "toolTip": "SVG and PDF are vector formats; PNG and TIFF are raster",
+        "order": 1
+    },
+    "style": {
+        "type": "stringList",
+        "label": "Style Preset",
+        "default": 0,
+        "values": ["default", "flat", "paton", "pmol", "skeletal", "bubble",
+                   "vdw", "tube", "mtube", "btube", "wire", "graph"],
+        "toolTip": "xyzrender style preset",
+        "order": 2
+    },
+    "canvas_size": {
+        "type": "integer",
+        "label": "Canvas Size (px)",
+        "default": 800,
+        "minimum": 100,
+        "maximum": 4000,
+        "toolTip": "Canvas size in pixels (raster formats scale with this)",
+        "order": 3
+    },
+    "hydrogens": {
+        "type": "stringList",
+        "label": "Hydrogens",
+        "default": 0,
+        "values": ["Preset default", "Show all", "Hide all"],
+        "toolTip": "Override the preset's handling of hydrogen atoms",
+        "order": 4
+    },
+    "transparent": {
+        "type": "boolean",
+        "label": "Transparent Background",
+        "default": false,
+        "toolTip": "Render with a transparent background instead of the preset color",
+        "order": 5
+    },
+    "indices": {
+        "type": "boolean",
+        "label": "Label Atom Indices",
+        "default": false,
+        "toolTip": "Draw atom index labels",
+        "order": 6
+    },
+    "stereo": {
+        "type": "boolean",
+        "label": "Label Stereochemistry",
+        "default": false,
+        "toolTip": "Annotate R/S, E/Z, axial, planar, and helical descriptors",
+        "order": 7
+    },
+    "nci": {
+        "type": "boolean",
+        "label": "Show Non-Covalent Interactions",
+        "default": false,
+        "toolTip": "Detect and draw hydrogen bonds and other close contacts as dotted lines",
+        "order": 8
+    }
+}
