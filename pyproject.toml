@@ -1,10 +1,13 @@
 [project]
 name = "avogadro-xyzrender"
-version = "0.1.0"
+version = "0.2.0"
 description = "Publication-quality molecular graphics from Avogadro using xyzrender"
 authors = [{name = "Geoff Hutchison", email = "geoff.hutchison@gmail.com"}]
 license = "BSD-3-Clause"
-dependencies = ["xyzrender>=0.3.8"]
+dependencies = [
+    # CJSON support (camera, custom colors, unit cells) is not on PyPI yet.
+    "xyzrender @ git+https://github.com/aligfellow/xyzrender.git@main",
+]
 requires-python = ">= 3.12"
 
 [project.scripts]
@@ -31,7 +34,7 @@ identifier = "render"
 menu = "File"
 submenu = "Export"
 item = "Rendered Image (xyzrender)..."
-input-format = "sdf"
+input-format = "cjson"
 user-options = "src/avogadro_xyzrender/render-options.json"
 
 [[tool.avogadro.menu-commands]]
@@ -39,5 +42,5 @@ identifier = "animation"
 menu = "File"
 submenu = "Export"
 item = "Rendered Animation (xyzrender)..."
-input-format = "sdf"
+input-format = "cjson"
 user-options = "src/avogadro_xyzrender/animation-options.json"

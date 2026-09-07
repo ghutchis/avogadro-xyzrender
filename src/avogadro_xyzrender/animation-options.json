@@ -10,7 +10,11 @@
         "type": "stringList",
         "label": "Rotation Axis",
         "default": 1,
-        "values": ["x", "y", "z"],
+        "values": [
+            "x",
+            "y",
+            "z"
+        ],
         "toolTip": "Axis the molecule rotates about",
         "order": 1
     },
@@ -18,10 +22,34 @@
         "type": "stringList",
         "label": "Style Preset",
         "default": 0,
-        "values": ["default", "flat", "paton", "pmol", "skeletal", "bubble",
-                   "vdw", "tube", "mtube", "btube", "wire", "graph"],
+        "values": [
+            "default",
+            "flat",
+            "paton",
+            "pmol",
+            "skeletal",
+            "bubble",
+            "vdw",
+            "tube",
+            "mtube",
+            "btube",
+            "wire",
+            "graph"
+        ],
         "toolTip": "xyzrender style preset",
         "order": 2
+    },
+    "orientation": {
+        "type": "stringList",
+        "label": "Orientation",
+        "default": 0,
+        "values": [
+            "Avogadro view",
+            "Auto-orient",
+            "Raw coordinates"
+        ],
+        "toolTip": "Use the camera saved with the molecule in Avogadro, xyzrender's PCA auto-orientation, or the raw coordinates",
+        "order": 3
     },
     "canvas_size": {
         "type": "integer",
@@ -30,7 +58,7 @@
         "minimum": 100,
         "maximum": 2000,
         "toolTip": "Canvas size in pixels. Large sizes make big GIF files.",
-        "order": 3
+        "order": 4
     },
     "fps": {
         "type": "integer",
@@ -39,21 +67,25 @@
         "minimum": 1,
         "maximum": 60,
         "toolTip": "Playback rate of the animation",
-        "order": 4
+        "order": 5
     },
     "hydrogens": {
         "type": "stringList",
         "label": "Hydrogens",
         "default": 0,
-        "values": ["Preset default", "Show all", "Hide all"],
+        "values": [
+            "Preset default",
+            "Show all",
+            "Hide all"
+        ],
         "toolTip": "Override the preset's handling of hydrogen atoms",
-        "order": 5
+        "order": 6
     },
     "transparent": {
         "type": "boolean",
         "label": "Transparent Background",
         "default": false,
         "toolTip": "Render with a transparent background instead of the preset color",
-        "order": 6
+        "order": 7
     }
 }

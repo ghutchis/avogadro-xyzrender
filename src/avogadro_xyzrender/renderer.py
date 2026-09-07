@@ -1,9 +1,17 @@
 """Render the current molecule to a publication-quality image using xyzrender."""
 
+import json
 import os
 import tempfile
 
 EXTENSIONS = {"SVG": ".svg", "PNG": ".png", "PDF": ".pdf", "TIFF": ".tiff"}
+
+# "Orientation" option -> (load(camera=...), render(orient=...))
+ORIENTATIONS = {
+    "Avogadro view": (True, None),
+    "Auto-orient": (False, True),
+    "Raw coordinates": (False, False),
+}
 
 
 def run_render(avo_input):
@@ -22,6 +30,7 @@ def run_render(avo_input):
         "transparent": bool(options.get("transparent", False)),
         "idx": bool(options.get("indices", False)),
         "stereo": bool(options.get("stereo", False)),
+        "orient": setup["orient"],
         "output": out_path,
     }
     kwargs.update(_hydrogen_kwargs(options))
@@ -51,6 +60,7 @@ def run_animation(avo_input):
         "config": options.get("style", "default"),
         "canvas_size": int(options.get("canvas_size", 500)),
         "transparent": bool(options.get("transparent", False)),
+        "orient": setup["orient"],
         "output": out_path,
     }
     kwargs.update(_hydrogen_kwargs(options))
@@ -66,12 +76,18 @@ def run_animation(avo_input):
 
 
 def _prepare(avo_input, options):
-    """Load the molecule from the SDF Avogadro sent and create the output directory.
+    """Load the molecule from the CJSON Avogadro sent and create the output directory.
 
-    Returns a dict with "molecule", "name", and "output_dir", or an "error" key.
+    CJSON is the native hand-off: xyzrender reads bond orders, per-atom colors,
+    the unit cell, and a saved camera orientation from it, none of which survive
+    a round trip through SDF.
+
+    Returns a dict with "molecule", "name", "output_dir", and "orient", or an
+    "error" key.
     """
-    sdf_content = avo_input.get("sdf", "")
-    if not sdf_content.strip():
+    cjson = avo_input.get("cjson", {})
+    numbers = cjson.get("atoms", {}).get("elements", {}).get("number", [])
+    if not numbers:
         return {"error": "No molecule data received. Please open a molecule first."}
 
     output_dir = os.path.expanduser(options.get("output_dir", "~/xyzrender-output"))
@@ -80,17 +96,20 @@ def _prepare(avo_input, options):
     except OSError as exc:
         return {"error": f"Could not create the output directory: {exc}"}
 
-    cjson = avo_input.get("cjson", {})
-    name = cjson.get("name", "").strip() or _name_from_sdf(sdf_content) or "molecule"
+    name = str(cjson.get("name", "")).strip() or "molecule"
     # sanitize for use as a file name
     name = "".join(c if c.isalnum() or c in "-_" else "_" for c in name)
 
-    # xyzrender reads from a file, so write the SDF to a temporary one
+    camera, orient = ORIENTATIONS.get(
+        options.get("orientation", "Avogadro view"), (True, None)
+    )
+
+    # xyzrender reads from a file, so write the CJSON to a temporary one
     with tempfile.NamedTemporaryFile(
-        mode="w", suffix=".sdf", prefix=name + "_", delete=False
+        mode="w", suffix=".cjson", prefix=name + "_", delete=False
     ) as tmp:
         tmp_path = tmp.name
-        tmp.write(sdf_content)
+        json.dump(cjson, tmp)
 
     from xyzrender import load
 
@@ -100,13 +119,19 @@ def _prepare(avo_input, options):
             charge=int(avo_input.get("charge", 0)),
             multiplicity=int(avo_input.get("spin", 1)),
             nci_detect=bool(options.get("nci", False)),
+            camera=camera,
         )
     except Exception as exc:
         return {"error": f"xyzrender could not parse the molecule: {exc}"}
     finally:
         os.unlink(tmp_path)
 
-    return {"molecule": molecule, "name": name, "output_dir": output_dir}
+    return {
+        "molecule": molecule,
+        "name": name,
+        "output_dir": output_dir,
+        "orient": orient,
+    }
 
 
 def _hydrogen_kwargs(options):
@@ -127,9 +152,3 @@ def _unique_path(directory, stem, extension):
         path = os.path.join(directory, f"{stem}-{counter}{extension}")
         counter += 1
     return path
-
-
-def _name_from_sdf(sdf_content: str) -> str:
-    """Extract the molecule name from the first line of an SDF/MOL block."""
-    first_line = sdf_content.splitlines()[0].strip() if sdf_content else ""
-    return first_line if first_line else ""
